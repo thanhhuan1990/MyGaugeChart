@@ -1,0 +1,10 @@
+<resources>
+    <string name="app_name">MyGaugeChart</string>
+    <string name="secondStart">Second Start</string>
+    <string name="secondEnd">Second End</string>
+    <string name="firstEnd">First End</string>
+    <string name="firstStart">First Start</string>
+    <string name="indicatorColor">Indicator Color</string>
+    <string name="markColor">Mark Color</string>
+    <string name="backgroundColor">Background Color</string>
+</resources>
