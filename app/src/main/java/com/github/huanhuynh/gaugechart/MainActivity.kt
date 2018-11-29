@@ -1,15 +1,20 @@
 package com.github.huanhuynh.gaugechart
 
 import android.annotation.SuppressLint
+import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.view.View
 import android.widget.SeekBar
 import com.crashlytics.android.Crashlytics
-import com.skydoves.colorpickerpreference.ColorPickerDialog
+import com.flask.colorpicker.ColorPickerView
+import com.flask.colorpicker.builder.ColorPickerDialogBuilder
 import io.fabric.sdk.android.Fabric
 import kotlinx.android.synthetic.main.layout_activity_main.*
 
+/**
+ * Demo app module's MainActivity
+ */
 class MainActivity : AppCompatActivity(), SeekBar.OnSeekBarChangeListener {
 
     @SuppressLint("CheckResult")
@@ -45,62 +50,109 @@ class MainActivity : AppCompatActivity(), SeekBar.OnSeekBarChangeListener {
     override fun onProgressChanged(seekBar: SeekBar?, p1: Int, p2: Boolean) {
 
         when(seekBar?.id){
-            percent.id          -> {
-                indicator_main?.percentTo(seekBar.progress)
-                tv_progress?.text = seekBar.progress.toString()
-            }
-            sb_mark_width.id    -> {
-                indicator_main?.markWidth = seekBar.progress / 2f
-                tv_mark_width?.text = (seekBar.progress / 2f).toString()
-            }
-            indicator_width.id  -> {
-                indicator_main?.indicatorWidth = seekBar.progress.toFloat()
-                tv_indicator_width?.text = seekBar.progress.toString()
-            }
-            start_degree.id  -> {
-                if(seekBar.progress <= end_degree.progress - 90) {
-                    indicator_main?.startDegree = seekBar.progress
-                    indicator_main?.percentTo(percent.progress)
-                    tv_start_degree?.text = seekBar.progress.toString()
-                } else {
-                    seekBar.progress = end_degree.progress - 90
-                }
-            }
-            end_degree.id  -> {
-                if(seekBar.progress >= start_degree.progress + 90) {
-                    indicator_main?.endDegree = seekBar.progress
-                    indicator_main?.percentTo(percent.progress)
-                    tv_end_degree?.text = seekBar.progress.toString()
-                } else {
-                    seekBar.progress = start_degree.progress + 90
-                }
-            }
-            gauge_width.id  -> {
-                indicator_main?.gaugeWidth = seekBar.progress.toFloat()
-                tv_gauge_width?.text = seekBar.progress.toString()
-            }
+            percent.id          -> setPercent(seekBar.progress)
+            sb_mark_width.id    -> setMarkWidth(seekBar.progress)
+            indicator_width.id  -> setIndicatorWidth(seekBar.progress)
+            start_degree.id     -> setStartDegree(seekBar.progress)
+            end_degree.id       -> setEndDegree(seekBar.progress)
+            gauge_width.id      -> setGaugeWidth(seekBar.progress)
         }
 
     }
 
     private fun selectColor(view: View) {
-        val builder = ColorPickerDialog.Builder(view.context, R.style.ColorPickerDialog)
-        builder.setPositiveButton("OK") { colorEnvelope ->
-            view.setBackgroundColor(colorEnvelope.color)
 
-            when (view.id) {
-                btnFirstStart.id            -> indicator_main?.setFirstStartColor(colorEnvelope.color)
-                btnFirstEnd.id              -> indicator_main?.setFirstEndColor(colorEnvelope.color)
-                btnSecondStart.id           -> indicator_main?.setSecondStartColor(colorEnvelope.color)
-                btnSecondEnd.id             -> indicator_main?.setSecondEndColor(colorEnvelope.color)
-                btnIndicatorColor.id        -> {
-                    indicator_main?.setCenterCircleColor(colorEnvelope.color)
-                    indicator_main?.setIndicatorColor(colorEnvelope.color)
-                }
-                btnMarkColor.id             -> indicator_main?.setMarkColor(colorEnvelope.color)
-                btnBackgroundColor.id       -> indicator_main?.setBackgroundCircleColor(colorEnvelope.color)
+        ColorPickerDialogBuilder
+            .with(this)
+            .setTitle("Choose color")
+            .initialColor((view.background as ColorDrawable).color)
+            .wheelType(ColorPickerView.WHEEL_TYPE.FLOWER)
+            .density(12)
+            .setPositiveButton("OK") { _, color, _ ->
+                view.setBackgroundColor(color)
+                setColor(view, color)
             }
+            .setNegativeButton("Cancel") { _, _ ->  }
+            .build()
+            .show()
+    }
+
+    private fun setColor(view: View, color: Int) {
+        when (view.id) {
+            btnFirstStart.id            -> indicator_main?.setFirstStartColor(color)
+            btnFirstEnd.id              -> indicator_main?.setFirstEndColor(color)
+            btnSecondStart.id           -> indicator_main?.setSecondStartColor(color)
+            btnSecondEnd.id             -> indicator_main?.setSecondEndColor(color)
+            btnIndicatorColor.id        -> {
+                indicator_main?.setCenterCircleColor(color)
+                indicator_main?.setIndicatorColor(color)
+            }
+            btnMarkColor.id             -> indicator_main?.setMarkColor(color)
+            btnBackgroundColor.id       -> indicator_main?.setBackgroundCircleColor(color)
         }
-        builder.show()
+    }
+
+    /**
+     * Set Gauge's percent [0..100]
+     * @param progress
+     */
+    private fun setPercent(progress: Int) {
+        indicator_main?.percentTo(progress)
+        tv_progress?.text = progress.toString()
+    }
+
+    /**
+     * Set mark's width
+     * @param value
+     */
+    private fun setMarkWidth(value: Int) {
+        indicator_main?.markWidth = value / 2f
+        tv_mark_width?.text = (value / 2f).toString()
+    }
+
+    /**
+     * Set Indicator's width
+     * @param value
+     */
+    private fun setIndicatorWidth(value: Int) {
+        indicator_main?.indicatorWidth = value.toFloat()
+        tv_indicator_width?.text = value.toString()
+    }
+
+    /**
+     * Set StartDegree of GaugeChart
+     * @param value
+     */
+    private fun setStartDegree(value: Int) {
+        if(value <= end_degree.progress - 90) {
+            indicator_main?.startDegree = value
+            indicator_main?.percentTo(percent.progress)
+            tv_start_degree?.text = value.toString()
+        } else {
+            start_degree?.progress = end_degree.progress - 90
+        }
+    }
+
+    /**
+     * Set EndDegree of GaugeChart
+     * @param value
+     */
+    private fun setEndDegree(value: Int) {
+        if(value >= start_degree.progress + 90) {
+            indicator_main?.endDegree = value
+            indicator_main?.percentTo(percent.progress)
+            tv_end_degree?.text = value.toString()
+        } else {
+            end_degree.progress = start_degree.progress + 90
+        }
+    }
+
+    /**
+     * Set width of Gauge's stroke
+     * @param value
+     */
+    private fun setGaugeWidth(value: Int) {
+        indicator_main?.gaugeWidth = value.toFloat()
+        tv_gauge_width?.text = value.toString()
     }
 }

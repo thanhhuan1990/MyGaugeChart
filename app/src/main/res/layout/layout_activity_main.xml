@@ -33,7 +33,6 @@
                 app:gv_minPercent="0"
                 app:gv_secondEndColor="@color/second_end_color_indicator"
                 app:gv_secondStartColor="@color/second_start_color_indicator"
-                app:gv_speedometerMode="NORMAL"
                 app:gv_startDegree="0"
                 app:gv_withMark="true" />
 
