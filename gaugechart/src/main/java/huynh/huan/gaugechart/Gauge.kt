@@ -96,9 +96,6 @@ abstract class Gauge @JvmOverloads constructor(context: Context, attrs: Attribut
             setPercentAt(lastPercent)
         }
 
-    /**
-     * get the min range, default = 0
-     */
     private var minPercent = 0
         set(value) {
             field = value
@@ -112,25 +109,9 @@ abstract class Gauge @JvmOverloads constructor(context: Context, attrs: Attribut
             setPercentAt(lastPercent)
         }
 
-    /**
-     * @return the last percent which you set by [.percentTo],
-     * @see .getCurrentPercent
-     */
     private var lastPercent = 0f
-    /**
-     * what is percent now in **int**
-     */
     private var currentIntPercent = 0
-    /**
-     * what is percent now in **float**
-     *
-     * @return current percent now.
-     */
     private var currentPercent = 0f
-
-    /**
-     * @return offset Percent, between [0,1].
-     */
     private val offsetPercent: Float
         get() = (currentPercent - 0f.getDegreeOfPercent) / (100f.getDegreeOfPercent - 0f.getDegreeOfPercent)
 
@@ -560,9 +541,6 @@ abstract class Gauge @JvmOverloads constructor(context: Context, attrs: Attribut
         realPercentAnimator.cancel()
     }
 
-    /**
-     * Update Gauge's rect follow Height of view.
-     */
     private fun updateGaugeRect() {
         val risk = gaugeWidth * .5f + padding
         val top = when {
@@ -577,17 +555,12 @@ abstract class Gauge @JvmOverloads constructor(context: Context, attrs: Attribut
         }
         gaugeRect.set(risk, top, width - risk, bottom)
     }
-    /**
-     * @return current Degree at that Percent.
-     */
+
     private val Float.degreeAtPercent: Float
         get() {
             return this + startDegree
         }
 
-    /**
-     * @return Percent value at current percent.
-     */
     private val Float.getDegreeOfPercent: Float
         get() {
             return this * (endDegree - startDegree).toFloat() * .01f
