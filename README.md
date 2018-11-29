@@ -1,4 +1,6 @@
 # Simplifier
+[![Codacy Badge](https://api.codacy.com/project/badge/Grade/113443c78da34886b77aaa1348ef3ce3)](https://www.codacy.com/app/thanhhuan1990/MyGaugeChart?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=thanhhuan1990/MyGaugeChart&amp;utm_campaign=Badge_Grade)
+
 - Show GaugeChart
 - Custom GaugeChart with simple methods
 
