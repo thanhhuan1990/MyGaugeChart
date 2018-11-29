@@ -1,0 +1,2 @@
+# MyGaugeChart
+[![Codacy Badge](https://api.codacy.com/project/badge/Grade/58103ac8ed0649aa83ae896198a7518b)](https://app.codacy.com/app/thanhhuan1990/MyGaugeChart?utm_source=github.com&utm_medium=referral&utm_content=thanhhuan1990/MyGaugeChart&utm_campaign=Badge_Grade_Dashboard)
