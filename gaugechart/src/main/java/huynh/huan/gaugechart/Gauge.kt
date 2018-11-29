@@ -82,12 +82,6 @@ abstract class Gauge @JvmOverloads constructor(context: Context, attrs: Attribut
      */
     var degree = startDegree.toFloat()
 
-    /**
-     * get the max range, default = 100
-     *
-     * @return max percent.
-     * @see .getMinPercent
-     */
     private var maxPercent = 100
         set(value) {
             field = value
@@ -343,6 +337,19 @@ abstract class Gauge @JvmOverloads constructor(context: Context, attrs: Attribut
 
     //==================================================================================================================
     // region Public Methods
+
+    /**
+     * Get center height of view depends on View's type: Top / Bottom / Normal.
+     */
+    fun centerY() : Float {
+        return when {
+            startDegree >=GaugeMode.BOTTOM.minDegree && endDegree <=GaugeMode.BOTTOM.maxDegree
+            -> padding.toFloat() + indicatorWidth()
+
+            else    -> width * .5f
+        }
+    }
+
     /**
      *Background Color,
      * Set it Color.TRANSPARENT to remove circle background.
@@ -512,11 +519,6 @@ abstract class Gauge @JvmOverloads constructor(context: Context, attrs: Attribut
         padding = Math.max(Math.max(left, right), Math.max(top, bottom))
     }
 
-    /**
-     * move Percent value to new Percent without animation.
-     *
-     * @param value current percent to move.
-     */
     private fun setPercentAt(value: Float) {
         val percent = when {
             value > maxPercent.toFloat().getDegreeOfPercent -> maxPercent.toFloat().getDegreeOfPercent
@@ -529,10 +531,6 @@ abstract class Gauge @JvmOverloads constructor(context: Context, attrs: Attribut
         invalidate()
     }
 
-    /**
-     * create canvas to draw [.backgroundBitmap].
-     * @return [.backgroundBitmap]'s canvas.
-     */
     private fun updateBackgroundBitmap() {
         if (width == 0 || height == 0)
             return
@@ -545,9 +543,6 @@ abstract class Gauge @JvmOverloads constructor(context: Context, attrs: Attribut
         }
     }
 
-    /**
-     * Verify inputted Start, End degrees
-     */
     private fun checkStartAndEndDegree() {
         if (startDegree < 0)
             throw IllegalArgumentException("StartDegree can\'t be Negative")
@@ -557,18 +552,6 @@ abstract class Gauge @JvmOverloads constructor(context: Context, attrs: Attribut
             throw IllegalArgumentException("EndDegree must be bigger than StartDegree !")
         if (endDegree - startDegree > 360)
             throw IllegalArgumentException("(EndDegree - StartDegree) must be smaller than 360 !")
-    }
-
-    /**
-     * Get center height of view depends on View's type: Top / Bottom / Normal.
-     */
-    fun centerY() : Float {
-        return when {
-            startDegree >=GaugeMode.BOTTOM.minDegree && endDegree <=GaugeMode.BOTTOM.maxDegree
-            -> padding.toFloat() + indicatorWidth()
-
-            else    -> width * .5f
-        }
     }
 
     @TargetApi(Build.VERSION_CODES.HONEYCOMB)
