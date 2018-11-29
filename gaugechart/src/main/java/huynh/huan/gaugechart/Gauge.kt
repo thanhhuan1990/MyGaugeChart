@@ -21,7 +21,14 @@ import kotlin.math.absoluteValue
 abstract class Gauge @JvmOverloads constructor(context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0)
     : View(context, attrs, defStyleAttr) {
 
+    /**
+     * Return degree between 2 marks if using mark.
+     */
     abstract fun getDegreeBetweenMark() : Float
+
+    /**
+     * Return width of Indicator if any
+     */
     abstract fun indicatorWidth() : Float
 
     //==================================================================================================================
@@ -244,8 +251,7 @@ abstract class Gauge @JvmOverloads constructor(context: Context, attrs: Attribut
     private fun initDraw(canvas: Canvas) {
         canvas.translate(0f, 0f)
 
-        if (backgroundBitmap != null)
-            canvas.drawBitmap(backgroundBitmap!!, 0f, 0f, backgroundBitmapPaint)
+        backgroundBitmap?.apply { canvas.drawBitmap(this, 0f, 0f, backgroundBitmapPaint) }
 
         // check onPercentChangeEvent.
         val newPercent = currentPercent.toInt()
@@ -315,11 +321,13 @@ abstract class Gauge @JvmOverloads constructor(context: Context, attrs: Attribut
 
     override fun onRestoreInstanceState(state: Parcelable?) {
         var lastState = state
-        val bundle = lastState as Bundle?
-        lastPercent = bundle!!.getFloat("percent")
-        lastState = bundle.getParcelable("superState")
-        super.onRestoreInstanceState(lastState)
-        setPercentAt(lastPercent)
+        val bundle = lastState as? Bundle?
+        bundle?.apply {
+            lastPercent = bundle.getFloat("percent")
+            lastState = bundle.getParcelable("superState")
+            super.onRestoreInstanceState(lastState)
+            setPercentAt(lastPercent)
+        }
     }
 
     override fun setPadding(left: Int, top: Int, right: Int, bottom: Int) {
@@ -412,13 +420,15 @@ abstract class Gauge @JvmOverloads constructor(context: Context, attrs: Attribut
 
         cancelPercentMove()
         animator = ValueAnimator.ofFloat(currentPercent, percent)
-        animator!!.interpolator = DecelerateInterpolator()
-        animator!!.duration = moveDuration
-        animator!!.addUpdateListener {
-            currentPercent = animator!!.animatedValue as Float
-            postInvalidate()
+        animator?.apply {
+            interpolator = DecelerateInterpolator()
+            duration = moveDuration
+            addUpdateListener {
+                currentPercent = animatedValue as Float
+                postInvalidate()
+            }
+            start()
         }
-        animator!!.start()
 
         currentPercent = percent
     }
@@ -501,7 +511,11 @@ abstract class Gauge @JvmOverloads constructor(context: Context, attrs: Attribut
     }
 
     /**
-     * notice that padding or size have changed.
+     * Update padding of chart.
+     * @param left
+     * @param top
+     * @param right
+     * @param bottom
      */
     private fun updatePadding(left: Int, top: Int, right: Int, bottom: Int) {
         padding = Math.max(Math.max(left, right), Math.max(top, bottom))
@@ -532,11 +546,12 @@ abstract class Gauge @JvmOverloads constructor(context: Context, attrs: Attribut
         if (width == 0 || height == 0)
             return
         backgroundBitmap = Bitmap.createBitmap(width, width, Bitmap.Config.ARGB_8888)
-        val canvas = Canvas(backgroundBitmap!!)
-        canvas.drawCircle(width * .5f, centerY(), width * .5f, circleBackPaint)
-
-        // to fix preview mode issue
-        canvas.clipRect(0, 0, width, width)
+        backgroundBitmap?.apply {
+            val canvas = Canvas(this)
+            canvas.drawCircle(width * .5f, centerY(), width * .5f, circleBackPaint)
+            // to fix preview mode issue
+            canvas.clipRect(0, 0, width, width)
+        }
     }
 
     /**
@@ -564,7 +579,7 @@ abstract class Gauge @JvmOverloads constructor(context: Context, attrs: Attribut
 
     @TargetApi(Build.VERSION_CODES.HONEYCOMB)
     private fun cancelPercentMove() {
-        animator!!.cancel()
+        animator?.cancel()
         realPercentAnimator.cancel()
     }
 
