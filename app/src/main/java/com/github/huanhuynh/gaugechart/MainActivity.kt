@@ -65,7 +65,7 @@ class MainActivity : AppCompatActivity(), SeekBar.OnSeekBarChangeListener {
         ColorPickerDialogBuilder
             .with(this)
             .setTitle("Choose color")
-            .initialColor((view.background as ColorDrawable).color)
+            .initialColor((view.background as? ColorDrawable)?.color ?: -0x1)
             .wheelType(ColorPickerView.WHEEL_TYPE.FLOWER)
             .density(12)
             .setPositiveButton("OK") { _, color, _ ->
@@ -92,37 +92,21 @@ class MainActivity : AppCompatActivity(), SeekBar.OnSeekBarChangeListener {
         }
     }
 
-    /**
-     * Set Gauge's percent [0..100]
-     * @param progress
-     */
     private fun setPercent(progress: Int) {
         indicator_main?.percentTo(progress)
         tv_progress?.text = progress.toString()
     }
 
-    /**
-     * Set mark's width
-     * @param value
-     */
     private fun setMarkWidth(value: Int) {
         indicator_main?.markWidth = value / 2f
         tv_mark_width?.text = (value / 2f).toString()
     }
 
-    /**
-     * Set Indicator's width
-     * @param value
-     */
     private fun setIndicatorWidth(value: Int) {
         indicator_main?.indicatorWidth = value.toFloat()
         tv_indicator_width?.text = value.toString()
     }
 
-    /**
-     * Set StartDegree of GaugeChart
-     * @param value
-     */
     private fun setStartDegree(value: Int) {
         if(value <= end_degree.progress - 90) {
             indicator_main?.startDegree = value
@@ -133,10 +117,6 @@ class MainActivity : AppCompatActivity(), SeekBar.OnSeekBarChangeListener {
         }
     }
 
-    /**
-     * Set EndDegree of GaugeChart
-     * @param value
-     */
     private fun setEndDegree(value: Int) {
         if(value >= start_degree.progress + 90) {
             indicator_main?.endDegree = value
@@ -147,10 +127,6 @@ class MainActivity : AppCompatActivity(), SeekBar.OnSeekBarChangeListener {
         }
     }
 
-    /**
-     * Set width of Gauge's stroke
-     * @param value
-     */
     private fun setGaugeWidth(value: Int) {
         indicator_main?.gaugeWidth = value.toFloat()
         tv_gauge_width?.text = value.toString()

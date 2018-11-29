@@ -40,9 +40,6 @@ abstract class Gauge @JvmOverloads constructor(context: Context, attrs: Attribut
     private val firstPaint          = Paint(Paint.ANTI_ALIAS_FLAG)
     private val secondPaint         = Paint(Paint.ANTI_ALIAS_FLAG)
 
-    /**
-     * to contain all drawing that doesn't change
-     */
     private var backgroundBitmap: Bitmap? = null
     private val backgroundBitmapPaint = Paint(Paint.ANTI_ALIAS_FLAG)
 
@@ -78,6 +75,7 @@ abstract class Gauge @JvmOverloads constructor(context: Context, attrs: Attribut
                 Log.w("Gauge", e.message)
             }
         }
+
     /**
      * to rotate indicator
      * @return current degreeAtPercent where indicator must be.
@@ -424,7 +422,7 @@ abstract class Gauge @JvmOverloads constructor(context: Context, attrs: Attribut
             interpolator = DecelerateInterpolator()
             duration = moveDuration
             addUpdateListener {
-                currentPercent = animatedValue as Float
+                currentPercent = (animatedValue as? Float) ?: 0f
                 postInvalidate()
             }
             start()
@@ -510,13 +508,6 @@ abstract class Gauge @JvmOverloads constructor(context: Context, attrs: Attribut
         return sweepGradient
     }
 
-    /**
-     * Update padding of chart.
-     * @param left
-     * @param top
-     * @param right
-     * @param bottom
-     */
     private fun updatePadding(left: Int, top: Int, right: Int, bottom: Int) {
         padding = Math.max(Math.max(left, right), Math.max(top, bottom))
     }
@@ -568,6 +559,9 @@ abstract class Gauge @JvmOverloads constructor(context: Context, attrs: Attribut
             throw IllegalArgumentException("(EndDegree - StartDegree) must be smaller than 360 !")
     }
 
+    /**
+     * Get center height of view depends on View's type: Top / Bottom / Normal.
+     */
     fun centerY() : Float {
         return when {
             startDegree >=GaugeMode.BOTTOM.minDegree && endDegree <=GaugeMode.BOTTOM.maxDegree
