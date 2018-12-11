@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <declare-styleable name="Gauge">
+
+        <attr name="gv_startDegree" format="integer" />
+        <attr name="gv_endDegree" format="integer" />
+        <attr name="gv_minPercent" format="integer" />
+        <attr name="gv_maxPercent" format="integer" />
+        <attr name="gv_backgroundCircleColor" format="color" />
+
+        <attr name="gv_firstStartColor" format="color" />
+        <attr name="gv_firstEndColor" format="color" />
+        <attr name="gv_secondStartColor" format="color" />
+        <attr name="gv_secondEndColor" format="color" />
+
+        <attr name="gv_gaugeWidth" format="float" />
+
+    </declare-styleable>
+
+    <declare-styleable name="GaugeView">
+        <attr name="gv_degreeBetweenMark" format="float" />
+
+        <attr name="gv_indicatorColor" format="color" />
+        <attr name="gv_indicatorWidth" format="dimension" />
+
+        <attr name="gv_withMark" format="boolean" />
+        <attr name="gv_markColor" format="color" />
+        <attr name="gv_markWidth" format="float" />
+
+        <attr name="gv_centerCircleColor" />
+        <attr name="gv_withPointer" format="boolean" />
+        <attr name="gv_pointerColor" format="color" />
+
+    </declare-styleable>
+</resources>
