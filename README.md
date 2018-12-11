@@ -4,6 +4,8 @@
 - Show GaugeChart
 - Custom GaugeChart with simple methods
 
+<p align="center"><a href="https://github.com/thanhhuan1990/MyGaugeChart/blob/master/demo.gif" target="_blank"><img width="250"src="demo.gif"></a></p>
+
 How to add dependency?
 --------
 
